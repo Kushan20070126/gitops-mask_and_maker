@@ -23,6 +23,23 @@ spec:
         - name: {{ .Values.frontend.name }}
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
+          env:
+            - name: VITE_GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: google-oauth-secret
+                  key: VITE_GOOGLE_CLIENT_ID
+                  optional: true
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - |
+                    if [ -n "$VITE_GOOGLE_CLIENT_ID" ]; then
+                      find /usr/share/nginx/html -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i "s|\"\"\.trim()|\"$VITE_GOOGLE_CLIENT_ID\".trim()|g; s|__VITE_GOOGLE_CLIENT_ID__|$VITE_GOOGLE_CLIENT_ID|g" {} + 2>/dev/null || true
+                    fi
           ports:
             - containerPort: {{ .Values.frontend.port }}
               name: http
