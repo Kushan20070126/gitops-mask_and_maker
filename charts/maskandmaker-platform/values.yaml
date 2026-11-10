@@ -183,18 +183,18 @@ services:
     image: oneengine/maskandmaker-3d-ai-service
     tag: latest
     port: 8000
-    replicas: 0
+    replicas: 1
     healthPath: /health
     extraEnv:
       OMP_NUM_THREADS: "2"
       MKL_NUM_THREADS: "2"
     resources:
       requests:
-        cpu: "50m"
-        memory: "128Mi"
-      limits:
         cpu: "500m"
-        memory: "512Mi"
+        memory: "2Gi"
+      limits:
+        cpu: "1800m"
+        memory: "6Gi"
 
   - name: api-gateway
     image: oneengine/maskandmaker-api-gateway
