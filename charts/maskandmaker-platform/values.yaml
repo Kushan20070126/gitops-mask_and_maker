@@ -183,7 +183,7 @@ services:
     image: oneengine/maskandmaker-3d-ai-service
     tag: latest
     port: 8000
-    replicas: 1
+    replicas: 0
     healthPath: /health
     extraEnv:
       OMP_NUM_THREADS: "2"
