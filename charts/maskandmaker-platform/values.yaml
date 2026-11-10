@@ -1,5 +1,5 @@
 namespace: maskandmaker
-imagePullPolicy: Always
+imagePullPolicy: IfNotPresent
 
 # ==============================================================
 # Frontend Configuration (Docker Hub: oneengine/maskandmaker-frontend)
