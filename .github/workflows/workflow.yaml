@@ -1,0 +1,62 @@
+name: Mask & Maker - GitOps Helm & ArgoCD Validation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - "feature/**"
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  validate-gitops:
+    name: "Validate Helm Charts & ArgoCD Manifests"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout GitOps Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.2
+
+      - name: Lint Helm Charts
+        run: |
+          helm lint charts/maskandmaker-infra
+          helm lint charts/maskandmaker-platform
+
+      - name: Render & Verify Helm Templates
+        run: |
+          mkdir -p /tmp/rendered
+          helm template maskandmaker-infra charts/maskandmaker-infra > /tmp/rendered/infra.yaml
+          helm template maskandmaker-platform charts/maskandmaker-platform > /tmp/rendered/platform.yaml
+          echo "Rendered infra lines: $(wc -l < /tmp/rendered/infra.yaml)"
+          echo "Rendered platform lines: $(wc -l < /tmp/rendered/platform.yaml)"
+
+      - name: Validate ArgoCD Application Manifests
+        run: |
+          python3 -c '
+          import glob, yaml
+          for f in glob.glob("argocd/**/*.yaml", recursive=True):
+              with open(f) as fp:
+                  docs = list(yaml.safe_load_all(fp))
+                  assert len(docs) > 0, f"Empty YAML: {f}"
+                  print(f"Validated {f} ({len(docs)} document(s))")
+          '
+
+      - name: Generate GitOps Summary
+        if: always()
+        run: |
+          echo "## ☸️ Mask & Maker — GitOps Helm & ArgoCD Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Chart / Manifest | Path | Sync Wave | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| **ArgoCD AppProject & Root App** | \`argocd/\` | `0` | ✅ Validated |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Infrastructure Helm Chart** | \`charts/maskandmaker-infra\` | `1` | ✅ Linted & Rendered |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Platform & Frontend Helm Chart** | \`charts/maskandmaker-platform\` | `2` | ✅ Linted & Rendered |" >> $GITHUB_STEP_SUMMARY

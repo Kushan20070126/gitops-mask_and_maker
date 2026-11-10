@@ -1,0 +1,221 @@
+namespace: maskandmaker
+imagePullPolicy: Always
+
+# ==============================================================
+# Frontend Configuration (Docker Hub: oneengine/maskandmaker-frontend)
+# ==============================================================
+frontend:
+  enabled: true
+  name: frontend
+  image:
+    repository: oneengine/maskandmaker-frontend
+    tag: latest
+  replicas: 1
+  port: 80
+  healthPath: /healthz
+  resources:
+    requests:
+      cpu: "25m"
+      memory: "32Mi"
+    limits:
+      cpu: "150m"
+      memory: "96Mi"
+
+# ==============================================================
+# Backend Microservices & API Gateway (Docker Hub: harshaitsme/maskandmaker-*)
+# ==============================================================
+services:
+  - name: catalog-service
+    image: harshaitsme/maskandmaker-catalog-service
+    tag: latest
+    port: 3001
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: artisan-service
+    image: harshaitsme/maskandmaker-artisan-service
+    tag: latest
+    port: 3002
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: content-service
+    image: harshaitsme/maskandmaker-content-service
+    tag: latest
+    port: 3003
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: verify-service
+    image: harshaitsme/maskandmaker-verify-service
+    tag: latest
+    port: 3004
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: order-service
+    image: harshaitsme/maskandmaker-order-service
+    tag: latest
+    port: 3005
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: search-service
+    image: harshaitsme/maskandmaker-search-service
+    tag: latest
+    port: 3006
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: identity-service
+    image: harshaitsme/maskandmaker-identity-service
+    tag: latest
+    port: 3007
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: portal-service
+    image: harshaitsme/maskandmaker-portal-service
+    tag: latest
+    port: 3008
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: media-service
+    image: harshaitsme/maskandmaker-media-service
+    tag: latest
+    port: 3009
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: settlement-service
+    image: harshaitsme/maskandmaker-settlement-service
+    tag: latest
+    port: 3010
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: notification-service
+    image: harshaitsme/maskandmaker-notification-service
+    tag: latest
+    port: 3011
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "25m"
+        memory: "48Mi"
+      limits:
+        cpu: "150m"
+        memory: "128Mi"
+
+  - name: image-to-3d-service
+    image: harshaitsme/maskandmaker-3d-ai-service
+    tag: latest
+    port: 8000
+    replicas: 1
+    healthPath: /health
+    extraEnv:
+      OMP_NUM_THREADS: "2"
+      MKL_NUM_THREADS: "2"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "128Mi"
+      limits:
+        cpu: "500m"
+        memory: "512Mi"
+
+  - name: api-gateway
+    image: harshaitsme/maskandmaker-api-gateway
+    tag: latest
+    port: 5000
+    replicas: 1
+    healthPath: /health
+    resources:
+      requests:
+        cpu: "30m"
+        memory: "48Mi"
+      limits:
+        cpu: "200m"
+        memory: "128Mi"
+
+# ==============================================================
+# Traefik Ingress (Routes AWS ALB Port 80 traffic to Frontend & API Gateway)
+# ==============================================================
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  host: ""

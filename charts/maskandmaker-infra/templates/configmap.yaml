@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mm-common-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    app.kubernetes.io/part-of: maskandmaker
+    app.kubernetes.io/managed-by: Helm
+data:
+  NODE_ENV: {{ .Values.config.nodeEnv | quote }}
+  MONGODB_URI: "mongodb://mongo-db:{{ .Values.mongodb.port }}/{{ .Values.config.mongodbDatabase }}"
+  RABBITMQ_URI: "amqp://{{ .Values.secrets.rabbitmqUser }}:{{ .Values.secrets.rabbitmqPassword }}@rabbitmq:{{ .Values.rabbitmq.amqpPort }}"
+  MINIO_ENDPOINT: "minio"
+  MINIO_PORT: {{ .Values.minio.apiPort | quote }}
+  MINIO_USE_SSL: {{ .Values.config.minioUseSsl | quote }}
+  MINIO_BUCKET: {{ .Values.config.minioBucket | quote }}
+  PUBLIC_MEDIA_BASE_URL: {{ .Values.config.publicMediaBaseUrl | quote }}
+  POLYGON_AMOY_RPC: {{ .Values.config.polygonAmoyRpc | quote }}
+  CATALOG_SVC_URL: {{ .Values.config.catalogSvcUrl | quote }}
+  ARTISAN_SVC_URL: {{ .Values.config.artisanSvcUrl | quote }}
+  CONTENT_SVC_URL: {{ .Values.config.contentSvcUrl | quote }}
+  VERIFY_SVC_URL: {{ .Values.config.verifySvcUrl | quote }}
+  ORDER_SVC_URL: {{ .Values.config.orderSvcUrl | quote }}
+  SEARCH_SVC_URL: {{ .Values.config.searchSvcUrl | quote }}
+  IDENTITY_SVC_URL: {{ .Values.config.identitySvcUrl | quote }}
+  PORTAL_SVC_URL: {{ .Values.config.portalSvcUrl | quote }}
+  MEDIA_SVC_URL: {{ .Values.config.mediaSvcUrl | quote }}
+  SETTLEMENT_SVC_URL: {{ .Values.config.settlementSvcUrl | quote }}
+  NOTIFICATION_SVC_URL: {{ .Values.config.notificationSvcUrl | quote }}
+  AI_3D_SVC_URL: {{ .Values.config.ai3dSvcUrl | quote }}

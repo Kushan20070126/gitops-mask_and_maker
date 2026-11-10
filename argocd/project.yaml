@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: mask-and-maker
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: "Mask & Maker — Sri Lankan Heritage Mask Marketplace GitOps Project"
+  sourceRepos:
+    - "https://github.com/Kushan20070126/gitops-mask_and_maker.git"
+    - "*"
+  destinations:
+    - namespace: maskandmaker
+      server: https://kubernetes.default.svc
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,0 +1,15 @@
+apiVersion: v2
+name: maskandmaker-platform
+description: Microservices, API Gateway, React Frontend & Traefik Ingress Helm Chart for Mask & Maker on K3s
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - maskandmaker
+  - microservices
+  - frontend
+  - k3s
+  - argocd
+  - gitops
+maintainers:
+  - name: Mask & Maker Platform Team

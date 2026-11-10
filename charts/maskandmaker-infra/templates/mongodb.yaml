@@ -1,0 +1,88 @@
+{{- if .Values.mongodb.enabled }}
+{{- if .Values.mongodb.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongo-db
+    app.kubernetes.io/part-of: maskandmaker
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.mongodb.persistence.size }}
+---
+{{- end }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongo-db
+    app.kubernetes.io/part-of: maskandmaker
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: mongo-db
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+        app.kubernetes.io/part-of: maskandmaker
+    spec:
+      containers:
+        - name: mongo-db
+          image: {{ .Values.mongodb.image }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.mongodb.port }}
+              name: mongodb
+          resources:
+            {{- toYaml .Values.mongodb.resources | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.mongodb.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.mongodb.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          {{- if .Values.mongodb.persistence.enabled }}
+          volumeMounts:
+            - name: mongo-storage
+              mountPath: /data/db
+          {{- end }}
+      {{- if .Values.mongodb.persistence.enabled }}
+      volumes:
+        - name: mongo-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mongo-db
+    app.kubernetes.io/part-of: maskandmaker
+spec:
+  type: ClusterIP
+  selector:
+    app: mongo-db
+  ports:
+    - name: mongodb
+      port: {{ .Values.mongodb.port }}
+      targetPort: {{ .Values.mongodb.port }}
+{{- end }}

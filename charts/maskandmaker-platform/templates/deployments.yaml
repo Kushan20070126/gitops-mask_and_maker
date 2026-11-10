@@ -1,0 +1,58 @@
+{{- range .Values.services }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.namespace }}
+  labels:
+    app: {{ .name }}
+    app.kubernetes.io/part-of: maskandmaker
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: {{ .replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+        app.kubernetes.io/part-of: maskandmaker
+    spec:
+      containers:
+        - name: {{ .name }}
+          image: "{{ .image }}:{{ .tag | default "latest" }}"
+          imagePullPolicy: {{ $.Values.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .port }}
+              name: http
+          env:
+            - name: PORT
+              value: {{ .port | quote }}
+            {{- range $k, $v := .extraEnv }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+          envFrom:
+            - configMapRef:
+                name: mm-common-config
+            - secretRef:
+                name: mm-common-secret
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: {{ .healthPath | default "/health" }}
+              port: {{ .port }}
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: {{ .healthPath | default "/health" }}
+              port: {{ .port }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+---
+{{- end }}

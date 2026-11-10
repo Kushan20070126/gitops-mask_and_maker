@@ -1,0 +1,15 @@
+apiVersion: v2
+name: maskandmaker-infra
+description: Stateful Infrastructure Helm Chart (MongoDB, RabbitMQ, MinIO S3, Shared Config & Secrets) for Mask & Maker on K3s
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - maskandmaker
+  - mongodb
+  - rabbitmq
+  - minio
+  - k3s
+  - gitops
+maintainers:
+  - name: Mask & Maker Platform Team

@@ -1,0 +1,76 @@
+namespace: maskandmaker
+storageClassName: local-path
+
+config:
+  nodeEnv: "production"
+  mongodbDatabase: "maskandmaker"
+  minioBucket: "maskandmaker-media"
+  minioUseSsl: "false"
+  publicMediaBaseUrl: "/api/media/stream"
+  polygonAmoyRpc: "https://rpc-amoy.polygon.technology"
+  catalogSvcUrl: "http://catalog-service:3001"
+  artisanSvcUrl: "http://artisan-service:3002"
+  contentSvcUrl: "http://content-service:3003"
+  verifySvcUrl: "http://verify-service:3004"
+  orderSvcUrl: "http://order-service:3005"
+  searchSvcUrl: "http://search-service:3006"
+  identitySvcUrl: "http://identity-service:3007"
+  portalSvcUrl: "http://portal-service:3008"
+  mediaSvcUrl: "http://media-service:3009"
+  settlementSvcUrl: "http://settlement-service:3010"
+  notificationSvcUrl: "http://notification-service:3011"
+  ai3dSvcUrl: "http://image-to-3d-service:8000"
+
+secrets:
+  jwtSecret: "mm_heritage_jwt_super_secret_key_2026!"
+  minioRootUser: "minioadmin"
+  minioRootPassword: "minioadmin"
+  rabbitmqUser: "guest"
+  rabbitmqPassword: "guest"
+
+mongodb:
+  enabled: true
+  image: "mongo:7.0"
+  port: 27017
+  persistence:
+    enabled: true
+    size: 2Gi
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "128Mi"
+    limits:
+      cpu: "300m"
+      memory: "384Mi"
+
+rabbitmq:
+  enabled: true
+  image: "rabbitmq:3-management-alpine"
+  amqpPort: 5672
+  managementPort: 15672
+  persistence:
+    enabled: true
+    size: 1Gi
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "96Mi"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+
+minio:
+  enabled: true
+  image: "minio/minio:latest"
+  apiPort: 9000
+  consolePort: 9001
+  persistence:
+    enabled: true
+    size: 2Gi
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "96Mi"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
