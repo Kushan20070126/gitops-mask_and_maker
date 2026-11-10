@@ -11,8 +11,8 @@ echo "[1/5] Creating 'argocd' and 'maskandmaker' namespaces..."
 sudo kubectl create namespace argocd --dry-run=client -o yaml | sudo kubectl apply -f -
 sudo kubectl create namespace maskandmaker --dry-run=client -o yaml | sudo kubectl apply -f -
 
-echo "[2/5] Installing ArgoCD in 'argocd' namespace..."
-sudo kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+echo "[2/5] Installing ArgoCD in 'argocd' namespace (server-side apply to handle large CRDs)..."
+sudo kubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 echo "[3/5] Waiting for ArgoCD Server to become ready..."
 sudo kubectl rollout status deployment/argocd-server -n argocd --timeout=300s
@@ -28,7 +28,15 @@ else
 fi
 
 echo "[5/5] Fetching initial ArgoCD admin password..."
-ARGOCD_PASS=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d || echo "pending")
+ARGOCD_PASS=""
+for i in {1..30}; do
+  ARGOCD_PASS=$(sudo kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" 2>/dev/null | base64 -d || true)
+  if [ -n "$ARGOCD_PASS" ]; then
+    break
+  fi
+  sleep 2
+done
+ARGOCD_PASS="${ARGOCD_PASS:-pending}"
 
 echo "=================================================================="
 echo "✅ ArgoCD GitOps Bootstrap Complete!"
