@@ -61,7 +61,7 @@ rabbitmq:
 
 minio:
   enabled: true
-  image: "quay.io/minio/minio:latest"
+  image: "alpine/minio:RELEASE.2025-10-15T17-29-55Z"
   apiPort: 9000
   consolePort: 9001
   persistence:
