@@ -26,7 +26,7 @@ frontend:
 # ==============================================================
 services:
   - name: catalog-service
-    image: harshaitsme/maskandmaker-catalog-service
+    image: oneengine/maskandmaker-catalog-service
     tag: latest
     port: 3001
     replicas: 1
@@ -40,7 +40,7 @@ services:
         memory: "128Mi"
 
   - name: artisan-service
-    image: harshaitsme/maskandmaker-artisan-service
+    image: oneengine/maskandmaker-artisan-service
     tag: latest
     port: 3002
     replicas: 1
@@ -54,7 +54,7 @@ services:
         memory: "128Mi"
 
   - name: content-service
-    image: harshaitsme/maskandmaker-content-service
+    image: oneengine/maskandmaker-content-service
     tag: latest
     port: 3003
     replicas: 1
@@ -68,7 +68,7 @@ services:
         memory: "128Mi"
 
   - name: verify-service
-    image: harshaitsme/maskandmaker-verify-service
+    image: oneengine/maskandmaker-verify-service
     tag: latest
     port: 3004
     replicas: 1
@@ -82,7 +82,7 @@ services:
         memory: "128Mi"
 
   - name: order-service
-    image: harshaitsme/maskandmaker-order-service
+    image: oneengine/maskandmaker-order-service
     tag: latest
     port: 3005
     replicas: 1
@@ -96,7 +96,7 @@ services:
         memory: "128Mi"
 
   - name: search-service
-    image: harshaitsme/maskandmaker-search-service
+    image: oneengine/maskandmaker-search-service
     tag: latest
     port: 3006
     replicas: 1
@@ -110,7 +110,7 @@ services:
         memory: "128Mi"
 
   - name: identity-service
-    image: harshaitsme/maskandmaker-identity-service
+    image: oneengine/maskandmaker-identity-service
     tag: latest
     port: 3007
     replicas: 1
@@ -124,7 +124,7 @@ services:
         memory: "128Mi"
 
   - name: portal-service
-    image: harshaitsme/maskandmaker-portal-service
+    image: oneengine/maskandmaker-portal-service
     tag: latest
     port: 3008
     replicas: 1
@@ -138,7 +138,7 @@ services:
         memory: "128Mi"
 
   - name: media-service
-    image: harshaitsme/maskandmaker-media-service
+    image: oneengine/maskandmaker-media-service
     tag: latest
     port: 3009
     replicas: 1
@@ -152,7 +152,7 @@ services:
         memory: "128Mi"
 
   - name: settlement-service
-    image: harshaitsme/maskandmaker-settlement-service
+    image: oneengine/maskandmaker-settlement-service
     tag: latest
     port: 3010
     replicas: 1
@@ -166,7 +166,7 @@ services:
         memory: "128Mi"
 
   - name: notification-service
-    image: harshaitsme/maskandmaker-notification-service
+    image: oneengine/maskandmaker-notification-service
     tag: latest
     port: 3011
     replicas: 1
@@ -180,7 +180,7 @@ services:
         memory: "128Mi"
 
   - name: image-to-3d-service
-    image: harshaitsme/maskandmaker-3d-ai-service
+    image: oneengine/maskandmaker-3d-ai-service
     tag: latest
     port: 8000
     replicas: 1
@@ -197,7 +197,7 @@ services:
         memory: "512Mi"
 
   - name: api-gateway
-    image: harshaitsme/maskandmaker-api-gateway
+    image: oneengine/maskandmaker-api-gateway
     tag: latest
     port: 5000
     replicas: 1
