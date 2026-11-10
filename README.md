@@ -72,6 +72,12 @@ SSH into your K3s Master node and run:
 # Option A: One-command bootstrap script
 curl -fsSL https://raw.githubusercontent.com/Kushan20070126/gitops-mask_and_maker/main/scripts/bootstrap-argocd.sh | bash
 
+ssh -i k3s-cluster.pem ubuntu@<PUBLIC IP> "sudo kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d"
+
+
+kubectl create secret generic google-oauth-secret -n maskandmaker --from-literal=VITE_GOOGLE_CLIENT_ID="YOUR_CLIENT_ID_HERE.apps.googleusercontent.com" --dry-run=client -o yaml | kubectl apply -f -
+
+
 # Option B: Manual kubectl apply (if ArgoCD is already installed)
 sudo kubectl apply -f https://raw.githubusercontent.com/Kushan20070126/gitops-mask_and_maker/main/argocd/project.yaml
 sudo kubectl apply -f https://raw.githubusercontent.com/Kushan20070126/gitops-mask_and_maker/main/argocd/root-app.yaml
