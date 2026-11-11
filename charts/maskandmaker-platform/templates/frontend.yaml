@@ -22,7 +22,7 @@ spec:
       containers:
         - name: {{ .Values.frontend.name }}
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag | default "latest" }}"
-          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy | default .Values.imagePullPolicy }}
           env:
             - name: VITE_GOOGLE_CLIENT_ID
               valueFrom:
