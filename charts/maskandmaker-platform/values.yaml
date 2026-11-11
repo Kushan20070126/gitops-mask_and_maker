@@ -9,7 +9,7 @@ frontend:
   name: frontend
   image:
     repository: oneengine/maskandmaker-frontend
-    tag: main
+    tag: latest
   replicas: 1
   port: 80
   healthPath: /healthz
