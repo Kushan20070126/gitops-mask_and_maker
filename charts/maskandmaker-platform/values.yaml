@@ -9,7 +9,7 @@ frontend:
   name: frontend
   image:
     repository: oneengine/maskandmaker-frontend
-    tag: sha-2fe750c
+    tag: sha-3104cf4
     pullPolicy: Always
   replicas: 1
   port: 80
